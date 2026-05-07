@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ôn Tập KTCK II Lịch sử 11</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #059669;
+            --error: #dc2626;
+            --bg: #f1f5f9;
+            --text: #1a1a1a;
+            --font-main: 'STIX Two Text', serif;
+            --font-heading: 'Crimson Pro', serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-family: var(--font-heading);
+        }
+
+        .score-live {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 15px 0 30px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e293b, #2563eb);
+            width: 0%;
+            transition: 0.5s;
+        }
+
+
+        .q-text {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #000;
+            white-space: pre-wrap;
+        }
+
+        .opt-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .opt-item {
+            padding: 16px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f8fafc;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .opt-item:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .tf-box {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .tf-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tf-btn {
+            padding: 8px 18px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            background: white;
+            font-weight: 600;
+            font-family: var(--font-main);
+        }
+
+        .selected-t {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .selected-f {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+            font-weight: 700;
+        }
+
+        .correct {
+            background: #dcfce7 !important;
+            color: #15803d !important;
+            border-color: #22c55e !important;
+        }
+
+        .wrong {
+            background: #fee2e2 !important;
+            color: #b91c1c !important;
+            border-color: #ef4444 !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #1e293b;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            font-family: var(--font-main);
+        }
+
+        .menu-btn {
+            background: var(--primary);
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .review-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .review-header {
+            background: #f8fafc;
+            padding: 10px 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-transform: uppercase;
+        }
+
+        .review-body {
+            padding: 15px;
+            font-size: 1.05rem;
+        }
+
+        .ans-box {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        .quiz-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .quiz-main {
+            flex: 1;
+        }
+
+        .quiz-sidebar {
+            width: 260px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .q-nav-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .page-btn:hover {
+            background: #94a3b8;
+        }
+
+        .q-nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .q-nav-btn.done {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .nav-controls button {
+            flex: none;
+            width: 45px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-controls button:hover {
+            opacity: 0.9;
+        }
+
+        @media(max-width: 900px) {
+
+            .quiz-layout {
+                flex-direction: column;
+            }
+
+            .quiz-sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .question-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .q-nav-btn.correct-tile {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .q-nav-btn.wrong-tile {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        .grid-pagination {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .page-btn {
+            border: none;
+            background: #cbd5e1;
+            color: #1e293b;
+            padding: 4px 8px !important;
+            height: auto !important;
+            width: auto !important;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .question-grid {
+            grid-template-columns: repeat(5, 1fr) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="start-screen" style="text-align: center;">
+        <h1 style="color: var(--primary); margin-bottom: 30px;">Ôn Tập Lịch sử 11</h1>
+        <p style="margin-bottom: 30px; color: #64748b;">Vui lòng chọn nội dung bạn muốn ôn tập:</p>
+        <button class="main-btn menu-btn" onclick="startQuiz('mc')">Trắc Nghiệm</button>
+        <button class="main-btn menu-btn" onclick="startQuiz('tf')">Đúng / Sai</button>
+        <button class="main-btn menu-btn" onclick="startQuiz('all')" style="background: #10b981;">Trắc Nghiệm + Đúng /
+            Sai</button>
+    </div>
+
+    <div class="container hidden" id="quiz-screen">
+
+        <div class="quiz-layout">
+
+            <!-- MAIN -->
+            <div class="quiz-main">
+
+                <div class="header-flex">
+                    <div>
+                        <h2 id="part-name"
+                            style="color: var(--primary); margin: 0; font-size: 1rem; text-transform: uppercase;">
+                            PHẦN THI
+                        </h2>
+
+                        <span id="score-live-display" class="score-live">Đúng: 0</span>
+                    </div>
+
+                    <span id="info" style="font-weight:700; color:#64748b;">
+                        0 / 0
+                    </span>
+                </div>
+
+                <div class="progress-bar">
+                    <div id="progress-fill"></div>
+                </div>
+
+                <div id="quiz-body"></div>
+                <button id="action-btn" class="main-btn hidden"></button>
+
+            </div>
+
+            <div class="quiz-sidebar">
+                <div class="question-grid" id="question-grid"></div>
+
+                <div class="nav-controls">
+                    <button onclick="prevQuestion()" title="Câu trước">←</button>
+
+                    <div class="grid-pagination">
+                        <button class="page-btn" onclick="changeGridPage(-1)">«</button>
+                        <span id="page-info">1 / 1</span>
+                        <button class="page-btn" onclick="changeGridPage(1)">»</button>
+                    </div>
+
+                    <button onclick="nextQuestion()" title="Câu sau">→</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const rawMC = [
+            { q: "Ai là người lãnh đạo cuọc kháng chiến chống Tống trên sông Bạch Đằng (năm 981)?", options: ["Lý Thường Kiệt.", "Lê Hoàn.", "Ngô Quyền.", "Trần Quốc Tuấn."], a: "Lê Hoàn." },
+            { q: "Năm 1075 - 1077, Lý Thường Kiệt đánh tan quân Tống ở phòng tuyến trên dòng sông nào?", options: ["Bạch Đằng.", "Rạch Gầm.", "Thu Bồn.", "Như Nguyệt."], a: "Như Nguyệt." },
+            { q: "Trận đánh tiêu biểu của quân dân nhà Trần trong cuộc kháng chiến chống quân Mông Cổ xâm lược (năm 1258) là", options: ["Đông Bộ Đầu.", "sông Bạch Đằng.", "Chi Lăng - Xương Giang.", "Đống Đa."], a: "Đông Bộ Đầu." },
+            { q: "Những trận đánh tiêu biểu trong cuộc kháng chiến chống quân Nguyên xâm lược (năm 1285) ", options: ["Tây Kết, Hàm Tử, Bạch Đằng.", "Tây Kết, Hàm Tử, Như Nguyệt.", "Tây Kết, Hàm Tử, Chương Dương.", "Chương Dương, Hàm Tử, Đống Đa."], a: "Tây Kết, Hàm Tử, Chương Dương." },
+            { q: "Vị tướng nào đã chỉ huy trận Bạch Đằng năm 1288 chống quân xâm lược Nguyên?", options: ["Trần Thái Tông.", "Trần Nhân Tông.", "Trần Thủ Độ.", "Trần Quốc Tuấn."], a: "Trần Quốc Tuấn." },
+            { q: "Trận đánh tiêu biểu trong cuộc kháng chiến chống quân Xiêm xâm lược (năm 1785) là ", options: ["Trận Rạch Gầm - Xoài Mút.", "Trận Bạch Đằng.", "Trận Như Nguyệt.", "Trận Ngọc Hồi - Đống Đa."], a: "Trận Rạch Gầm - Xoài Mút." },
+            { q: "Trận Ngọc Hồi - Đống Đa là trận đánh tiêu biểu trong cuộc kháng chiến chống lại quân xâm lược nào?", options: ["Minh.", "Thanh.", "Nguyên.", "Xiêm."], a: "Thanh." },
+            { q: "Kế sách 'Tiên phát chế nhân' đã được triều đại nào sử dụng để chống lại quân xâm lược nào?", options: ["Tiền Lê - quân Tống.", "Nhà Lý - quân Tống.", "Nhà Trần - quân Nguyên.", "Hậu Lê - quân Minh."], a: "Nhà Lý - quân Tống." },
+            { q: "Trong cuộc kháng chiến chống quân xâm lược Thanh, vua Quang Trung đã sử dụng chiến thuật quân sự nào?", options: ["Thần tốc, bất ngờ.", " Vườn không nhà trống.", "Tiên phát chế nhân.", "Đóng cọc trên sông."], a: "Thần tốc, bất ngờ." },
+            { q: "Nhân vật nào sau đây có vai trò quan trọng trong khởi nghĩa Lam Sơn chống lại giặc Minh đô hộ thế kỉ XV?", options: ["Lê Thánh Tông.", "Lê Lai.", "Nguyễn Trãi.", "Nguyễn Bỉnh Khiêm."], a: "Nguyễn Trãi." },
+            { q: "Thắng lợi của cuộc khởi nghĩa nào sau đây đã dẫn đến sự thành lập nhà Lê sơ? ", options: ["Khởi nghĩa Lý Bí.", "Khởi nghĩa Lam Sơn.", "Khởi nghĩa Phùng Hưng.", "Khởi nghĩa Hai Bà Trưng."], a: "Khởi nghĩa Lam Sơn." },
+            { q: "Cuộc khởi nghĩa nào sau đây không nằm trong phong trào đấu tranh chống sự đô hộ của các triều đại phong kiến phương Bắc?", options: ["Khởi nghĩa Hai Bà Trưng.", "Khởi nghĩa Lam Sơn.", "Phong trào Tây Sơn.", "Khởi nghĩa Phùng Hưng."], a: "Phong trào Tây Sơn." },
+            { q: "Cuộc khởi nghĩa nào sau đây đã đặt cơ sở bước đầu cho việc thống nhất đất nước vào cuối thế kỉ XVIII?", options: ["Khởi nghĩa Lý Bí.", "Khởi nghĩa Lam Sơn.", "Phong trào Tây Sơn.", "Khởi nghĩa Bà Triệu."], a: "Phong trào Tây Sơn." },
+            { q: "Hai Bà Trưng khởi nghĩa nhằm mục đích gì?", options: ["Trả thù cho Thi Sách.", "Đền nợ nước, trả thù nhà.", "Rửa hận.", "Trả thù riêng."], a: "Đên nợ nước, trả thù nhà." },
+            { q: "Bà Triệu có tên thật là gì?", options: ["Triệu Thị Trinh.", "Triệu Thiên Thư.", "Triệu Thị Trang.", "Triệu Thị Trắc."], a: "Triệu Thị Trinh." },
+            { q: "Năm 1771 đã diễn ra cuộc khởi nghĩa nào trên vùng đất Đàng Trong?", options: ["Khởi nghĩa Mai Trúc Loan.", "Khởi nghĩa Phan Bá Vành.", "Phong trào Tây Sơn.", "Khởi nghĩa Bãi Sậy."], a: "Phong trào Tây Sơn." },
+            { q: "Năm 544, Lý Bí lên ngôi hoàng đế, sử cũ gọi là", options: ["Lý Bắc Đế.", "Lý Nam Đế.", "Lý Đông Dế.", "Lý Tây Đến."], a: "Lý Nam Đế." },
+            { q: "Nội dung nào dưới đây không pản ánh đúng ý nghĩa của phong trào Tây Sơn (1771 - 1789)?", options: ["Từ một cuộc khởi nghĩa địa phương đã phát triển thành phong trào dân tộc rộng lớn.", "Lật đổ chính quyền phong kiến Nguyễn - Trịnh, xóa bỏ tình trạng chia cắt đất nước.", "Đập tan các thế lực ngoại xâm hùng mạnh, bảo vệ vững chắc nền độc lập dân tộc.", "Đập tan âm mưu thủ tiêu nền văn hóa Đại Việt, mở ra thời kì phát triển mới đất nước."], a: "Đập tan âm mưu thủ tiêu nền văn hóa Đại Việt, mở ra thời kì phát triển mới đất nước." },
+            { q: "Nội dung nào dưới đây phản ánh đúng ý nghĩa của cuộc khởi nghĩa Lam Sơn (1418 - 1927)?", options: ["Từ một cuộc khởi nghĩa địa phương đã phát triển thành phong trào dân tộc rộng lớn.", "Lật đổ chính quyền phong kiến Nguyễn - Trịnh, xóa bỏ tình trạng chia cắt đất nước.", "Đập tan các thế lực ngoại xâm hùng mạnh, bảo vệ vững chắc nền độc lập dân tộc.", "Đập tan âm mưu thủ tiêu nền văn hóa Đại Việt, mở ra thời kì phát triển mới đất nước."], a: "Đập tan âm mưu thủ tiêu nền văn hóa Đại Việt, mở ra thời kì phát triển mới đất nước." },
+            { q: "Một trong những bài học lịch sử sâu sắc được rút ra từ các cuộc khởi nghĩa và chiến tranh giải phóng trong lịch sử dân tộc Việt Nam và còn giữ nguyên giá trị đến ngày nay là", options: ["Tập trung xây dựng lực lượng yêu nước.", "Triệt để lợi dụng mâu thuẫn giữa các nước.", "Kết hợp đấu tranh quân sự với ngoại giao.", "Đa phương hóa trong quan hệ quốc tế."], a: "Tập trung xây dựng lực lượng yêu nước." },
+            { q: "Nội dung nào sau đây là một trong những cải cách về chính trị của Hồ Quý Ly và triều Hồ?", options: ["Hạn chế gia nô.", "Hạn chế Phật giáo và Đạo giáo.", "Xóa bỏ tình trạng che giấu ruộng đất.", "Thành lập nhiều cơ quan, đặt ra nhiều chức quan mới."], a: "Thành lập nhiều cơ quan, đặt ra nhiều chức quan mới." },
+            { q: "Nội dung nào sau đây là một trong những cải cách về xã hội của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?", options: ["Sửa đổi nội dung các khoa thi.", "Ban hành quy chế và hình luật mới.", "Kiểm soát hộ tịch trên cả nước.", "Khuyến khích sử dụng chữ Nôm."], a: "Kiểm soát hộ tịch trên cả nước." },
+            { q: "Ý nghĩa nào sao đây không là nội dung cải cách trên lĩnh vực chính trị - hành chính của Hồ Quý Ly và Triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?", options: ["Thông qua thi cử để tuyển chọn người đỗ đạt, bổ nhiệm quan lại.","Thống nhất bộ máy hành chính từ trung ương đến địa phương", "Dời đô từ thành Thăng Long về thành Tây Đô (Thanh Hóa).", "Đặt chức Hà Đê Sứ ở các lộ đê quản mọi việc trong phủ, châu."], a: "Đặt chức Hà Đê Sứ ở các lộ đê quản mọi việc trong phủ, châu." },
+            { q: "Để hạn chế sự phát triển của Phật giáo. Hồ Quý Ly dã bắt các nhà sư trong độ tuổi nào phải hoàn tục?", options: ["Dưới 60 tuổi.", "Trên 50 tuổi.", "Dưới 50 tuổi.", "Trên 60 tuổi."], a: "Dưới 50 tuổi." },
+            { q: "Nội dung nào sau đây là cải cách trên lĩnh vực quân sự - quốc phòng của Hồ Quý Ly và triều Hồ cuối thế kí XIV, đầu thế kỉ XX?", options: ["Xây dựng phòng tuyến chống giặc trên sông Như Nguyệt.", "Ban hành quy chế và hình luật mới của quốc gia.", "Cải tiến vũ khí, chế tạo súng thần cơ, đóng thuyền chiến.", "Bố trí mai phục và đóng cọc gỗ trên sông Bạch Đằng."], a: "Cải tiến vũ khí, chế tạo súng thần cơ, đóng thuyền chiến." },
+            { q: "Tăng cường kiểm tra giám sát quan lại, đặc biệt là ở các cấp địa phương là nội dung cải cách của Hồ Quý Ly và triều Hồ trên lĩnh vực", options: ["Tổ chức chính quyền, pháp luật.", "Quân đội, quốc phòng.", "Kinh tế, xã hội.", "văn hoá, giáo dục."], a: "Tổ chức chính quyền, pháp luật." },
+            { q: "Để ổn định giá lúa gạo, Hồ Quý Ly và triều Hồ đã thi hành chính sách nào sau đây?", options: ["Phát hành 'Thông bảo hội sao'.", "Đặt kho 'Thường bình'.", "Lập sổ ruộng trên cả nước.", "Đặt chức quản lý chợ."], a: "Phát hành 'Thông bảo hội sao'." },
+            { q: "Thành nhà Hồ là di tích lịch sử bắt đầu được xây dưới triều nào?", options: ["Nhà Trần.", "Nhà Lý.", "Nhà Lê.", "Nhà Hồ."], a: "Nhà Trần." },
+            { q: "Năm 1396, Hồ Quý Ly cho ban hành tiền giấy đầu tiên trong lịch sử Việt Nam mang tên là", options: ["'Thông bảo hội sao'.", "'Thái bình thông bảo'.", "'Thiên phúc trấn bảo'.", "'Thái Đức thông bảo'."], a: "'Thông bảo hội sao'." },
+            { q: "Để hạn chế sự tập trung quyền lực của các vương hầu, quý tộc, Hồ Quý Ly và Triều Hồ đã thực hiện chính sách gì?", options: ["Ban hành phép hạn nô.", "Thực hiện chính sách quân điền.", "Ban hành chính sách hạn điền.", "Tiến hành chiếm đoạt ruộng đất."], a: "Ban hành phép hạn nô." },
+            { q: "Cải cách hành chính của Lê Thánh Tông diễn ra trong bối cảnh chính trị như thế nào?", options: ["Nội bộ triều đình có nhiều mâu thuẫn biến động.", "Nạn đói diễn ra trầm trọng, đời sống khổ cực.", "Chế độ ruộng đất bất cập, tình trạng mất mùa tăng.", "Nạn cường hào lộng hành và quan lại tham ô."], a: "Nội bộ triều đình có nhiều mâu thuẫn biến động." },
+            { q: "Vua Lê Thánh Tông tập trung tiến hành cuộc cải cách trong lĩnh vực nào?", options: ["Kinh tế.", "Giáo dục.", "Hành chính.", "Văn hóa."], a: "Hành chính." },
+            { q: "Cuộc cải cách hành chính lớn nhất nước ta từ thế kỉ X – XV do ai thực hiện?", options: ["Khúc Hạo.", "Lý Thánh Tông.", "Trần Thánh Tông.", "Lê Thánh Tông."], a: "Lê Thánh Tông." },
+            { q: "Mô hình tổ chức hành chính nào sau đây thuộc thời Lê sơ sau cải cách hành chính của vua Lê Thánh Tông?", options: ["Đạo, lộ, phủ, châu, hương, giáp, xã.", "Đạo thừa tuyên, phủ, huyện, châu, xã.", "Lộ, trấn, đạo, phủ, châu, giáp, xã.", "Lộ, hương, đạo, phủ, châu, huyện, xã."], a: "Đạo thừa tuyên, phủ, huyện, châu, xã." },
+            { q: "Bộ Quốc triều hình luật thời Lê sơ còn có tên gọi khác là gì?", options: ["Hình luật.", "Hình thư.", "Luật Hồng Đức.", "Luật Gia Long."], a: "Luật Hồng Đức." },
+            { q: "Thời Lê sơ đã thực hiện chính sách kinh tế nông nghiệp nào sau đây?", options: ["quân điền.", "thổ điền.", "điền địa.", "hà đê sứ."], a: "quân điền." },
+            { q: "Thời Lê sơ đã thực hiện chính sách kinh tế nông nghiệp nào sau đây?", options: ["lộc điền.", "thổ điền.", "điền địa.", "hà đê sứ."], a: "lộc điền." },
+            { q: "Ruộng đất công làng xã thời Lê sơ được phân chia theo chế độ nào?", options: ["Điền trang.", "Lộc điền.", "Quân điền.", "Đồn điền."], a: "Quân điền." },
+            { q: "Thời vua Lê Thánh Tông, nhà nước có chính sách gì để tôn vinh những người đỗ đại khoa?", options: ["Lập đến thờ các danh nhân.", "Cấp bằng Thạc sĩ, Tiến sĩ.", "Dựng bia đá ở Văn Miếu.", "Trực tiếp phục vụ cho vua."], a: "Dựng bia đá ở Văn Miếu." },
+            { q: "Hệ thống cơ quan phụ trách Đạo Thừa tuyên gọi là", options: ["tam ty.", "Đô ty.", "Hiến ty.", "Thông chính ty."], a: "tam ty." },
+            { q: "Bộ máy nhà nước phong kiến nước ta được tổ chức hoàn chỉnh dưới triều vua nào?", options: ["Lý Thái Tổ.", "Trần Thánh Tông.", "Lê Thái Tông.", "Lê Thánh Tông."], a: "Lê Thánh Tông." },
+            { q: "Trong lịch sử nước ta nối tiếp sự nghiệp của nhà Hồ (1400 – 1407) là triều đại phong kiến nào?", options: ["Nhà Mạc.", "Tiền Lê.", "Lê Sơ.", "Lê Trung Hưng."], a: "Lê Sơ." },
+            { q: "Trong thời kì Văn minh Đại Việt dưới thời Lê sơ, Nho giáo có vị trí như thế nào?", options: ["Độc tôn.", "Quan trọng.", "Quốc giáo.", "Mạnh mẽ."], a: "Độc tôn." },
+            { q: "Cuộc cải cách do vua Lê Thánh Tông thực hiện có ý nghĩa như thế nào đối với đất nước? ", options: ["Là khuôn mẫu điển hình cho nhà Lê sơ noi theo.", "Tạo điều kiện cho kinh tế thương nghiệp phát triển mạnh.", "Kìm hãm sự chuyên quyền của quan lại triều đình.", "Làm chuyển biến toàn bộ hoạt động của đất nước."], a: "Làm chuyển biến toàn bộ hoạt động của đất nước." },
+            { q: "Cuộc cải cách do vua Lê Thánh Tông thực hiện có ý nghĩa như thế nào đối với Vương triều Lê sơ? ", options: ["Là khuôn mẫu điển hình cho nhà Lê sơ noi theo.", "Tạo điều kiện cho kinh tế thương nghiệp phát triển mạnh.", "Tạo cơ sở cho Vương triều Lê sơ phát triển vững mạnh.", "Kìm hãm sự chuyên quyền của quan lại triều định."], a: "Tạo cơ sở cho Vương triều Lê sơ phát triển vững mạnh." },
+            { q: "Đối với vùng dân tộc thiểu số, về hành chính, vua Minh Mạng đã", options: ["đổi các bản, sách, động thành xã.", "ra lệnh xoá bỏ tập tục truyền thống.", "xóa bỏ Bắc thành và Gia Định thành.", "cho triển khai đo đạc lại ruộng đất."], a: "đổi các bản, sách, động thành xã." },
+            { q: "Dưới thời của vua Minh Mạng, cơ quan nào có nhiệm vụ giám sát, vạch lỗi các cơ quan, giám sát việc thi hành pháp luật?", options: ["Đô sát viện.", "Hàn lâm viện.", "Cơ mật viện.", "Thái y viện."], a: "Đô sát viện." },
+            { q: "Nội dung nào sau đây không phải là kết quả của cuộc cải cách của vua Minh Mạng?", options: ["Xây dựng được chế độ quân chủ trung ương tập quyền cao độ.", "Thống nhất đơn vị hành chính địa phương trong cả nước.", "Tổ chức cơ cấu bộ máy nhà nước gọn nhẹ, chặt chẽ.", "Xây dựng chế độ quân chủ trung ương phân quyền cao độ."], a: "Xây dựng chế độ quân chủ trung ương phân quyền cao độ." },
+            { q: "Nhận xét nào sau đây là đúng về ý nghĩa cải cách hành chính của vua Minh Mạng đối với Việt Nam hiện nay?", options: ["Là cơ sở để phân chia đơn vị hành chính.", "Tinh giảm bộ máy hành chính.", "Nâng cao hiệu quả trong quản lí nhà nước.", "Nâng cao hiệu quả trong quản lí dân cư."], a: "Là cơ sở để phân chia đơn vị hành chính." },
+            { q: "Cuộc cải cách của vua Minh Mạng nửa đầu thế kỉ XIX đã", options: ["thống nhất đất nước về mặt lãnh thổ.", "thống nhất đất nước về mặt hành chính.", "xác lập quan hệ ngoại giao với các nước phương Tây.", "phân chia các tỉnh trên cả nước như hiện nay."], a: "thống nhất đất nước về mặt hành chính." },
+            { q: "Nhận xét nào sau đây là đúng về ý nghĩa của cuộc cải cách Minh Mạng nửa đầu XIX?", options: ["Hệ thống cơ quan hành chính được tổ chức đơn giản, gọn nhẹ chưa từng có.", "Thống nhất hệ thống đơn vị hành chính trong cả nước, làm cơ sở cho sự phân chia tỉnh huyện ngày nay.", "Tạo điều kiện thuận lợi cho việc quản lí nhà nước từ trung ương đến địa phương xuống tận các cấp thôn, xóm.", "Để lại những bài học kinh nghiệm bổ ích về các nguyên tắc xây dựng và tổ hoạt động của bộ máy nhà nước."], a: "Thống nhất hệ thống đơn vị hành chính trong cả nước, làm cơ sở cho sự phân chia tỉnh huyện ngày nay." },
+            { q: "Cơ mật viện có chức năng, nhiệm vụ nào?", options: ["Tiếp nhận và xử lý công văn.", "Tham mưu, tư vấn cho nhà vua các vấn đề chiến lược về quân sự.", "Nắm quyền chỉ đạo các quan văn, thay thế vua xử lí một số công việc.", "Giám sát thi hành luật pháp và quy định triều đình."], a: "Tham mưu, tư vấn cho nhà vua các vấn đề chiến lược về quân sự." },
+            { q: "Lĩnh vực trọng tâm trong cải cách vua Minh Mạng (nửa đầu thế kỉ XIX) là", options: ["kinh tế.", "chính trị.", "văn hóa.", "hành chính."], a: "hành chính." },
+            { q: "Năm 1829, vua Minh Mạng cho lập Nội các thực hiện nhiệm vụ nào dưới đây?", options: ["Tiếp nhận và xử lý công văn.", "Phụ trách thuế khóa, hộ tịch.", "Cố vấn các vấn đề quân sự.", "Khởi thảo văn kiện cho triều đình."], a: "Tiếp nhận và xử lý công văn." },
+            { q: "Điểm khác biệt căn bản trong nội dung cuộc cải cách của Minh Mạng nửa đầu XIX so với cuộc cải cách Lê Thánh Tông thế kỉ XV là gì?", options: ["Chia cả nước làm 30 tỉnh và 1 phủ Thừa Thiên.", "Việc quản lí nhà nước từ trung ương đến địa phương.", "Các phủ, huyện, châu, tổng, xã vẫn giữ như cũ.", "Địa phương hoạt động theo sự điều hành của triều đình."], a: "Chia cả nước làm 30 tỉnh và 1 phủ Thừa Thiên." },
+            { q: "Biển Đông là biển thuộc khu vực nào sau đây?", options: ["Ấn Độ Dương.", "Thái Bình Dương.", "Đại Tây Dương.", "Địa Trung Hải."], a: "Thái Bình Dương." },
+            { q: "Eo biển nào sau đây không nằm trong khu vực Biển Đông?", options: ["Eo Đài Loan.", "Eo Magenllan.", "Eo Ma- lắc-ca.", "Eo Ba-si."], a: "Eo Magenllan." },
+            { q: "Biển Đông có vị trí chiến lược quan trọng ở khu vực châu Á- Thái Bình Dương về lĩnh vực nào sau đây?", options: ["Văn hóa - Thể thao.", "Giáo dục - Y tế.", "Quốc phòng - an ninh.", "Văn hóa - giáo dục."], a: "Quốc phòng - an ninh." },
+            { q: "Biển Đông có ảnh hưởng trực tiếp tới cuộc sống của người dân ở một số nước thuộc khu vực nào sau đây?", options: ["Châu Phi.", "Châu Mĩ.", "Châu Âu.", "Châu Á- Thái Bình Dương."], a: "Châu Á- Thái Bình Dương." },
+            { q: "Biển Đông có vị trí quan trọng trong lĩnh vực nào của ngành hàng hải quốc tế? ", options: ["Giao thông vận tải.", "Quản lí cảng biển.", "Quản lí tàu biển.", "Khai thác máy tàu biển."], a: "Giao thông vận tải." },
+            { q: "Các cảng biển lớn trên Biển Đông có vai trò như thế nào?", options: ["Điểm trung chuyển của tàu thuyền.", "Nơi giao lưu kinh tế, văn hóa.", "Điểm tập trung phát triển du lịch.", "Nơi giải quyết các vấn đề xã hội."], a: "Điểm trung chuyển của tàu thuyền." },
+            { q: "Nội dung nào sau đây phản ánh đúng tầm quan trọng của Biển Đông về giao thông hàng hải ở khu vực Thái Bình Dương - Ấn Độ Dương? ", options: ["Là nơi có trữ lượng khai thác thủy sản lớn nhất.", "Là nơi có trữ lượng khai thác dầu mỏ lớn nhất.", "Là nơi tập trung các tuyến đường biển chiến lược.", "Là nơi có nhiều căn cứ quân sự lớn nhất."], a: "Là nơi tập trung các tuyến đường biển chiến lược." },
+            { q: "Biển Đông là cầu nối ra Thái Bình Dương và Ấn Độ Dương bằng các eo biển, quan trọng nhất trong số đó là ", options: ["eo biển Đài Loan.", "eo Ba-si, Ga-xpa.", "eo biển Ma-lác-ca.", "eo biển Ca-li-man-ta."], a: "eo biển Ma-lác-ca." },
+            { q: "Nội dung nào sau đây phản ánh đúng về vị trí chiến lược của eo biển Ma-lac-ca ở Biển Đông? ", options: ["Là tuyến đường duy nhất vận chuyển nông sản của thế giới.", "Là điểm điều tiết giao thông đường biển duy nhất ở châu Á.", "Là hàng lang hàng hải chính kết nối nhiều nước trên thế giới.", "Là huyết mạch trung chuyển các mặt hàng trên thế giới."], a: "Là hàng lang hàng hải chính kết nối nhiều nước trên thế giới." },
+            { q: "Một trong những loại khoáng sản ở Biển Đông có giá trị đặc biệt quan trọng đối với sự phát triển kinh tế của một quốc gia là?", options: ["Than.", "Dầu khí.", "Đồng.", "Sắt."], a: "Dầu khí." },
+            { q: "Eo Ma-lắc-ca là điểm điều tiết giao thông quan trọng bậc nhất ở châu lục nào sau đây?", options: ["Châu Âu.", "Châu Mĩ.", "Châu Phi.", "Châu Á."], a: "Châu Á." },
+            { q: "Đảo Phú Lâm và đảo Linh Côn thuộc phần lãnh thổ nào sau đây của Việt Nam ở Biển Đông?", options: ["Quần đảo Hoàng Sa.", "Đảo Phú Quốc.", "Đảo Cồn Cỏ.", "Quần đảo Trường sa."], a: "Quần đảo Hoàng Sa." },
+            { q: "Quần đảo nào sau đây thuộc chủ quyền của Việt Nam nằm ở trung tâm  của Biển Đông?", options: ["Borneo.", "Greenland.", "Trường Sa.", "New Guinea."], a: "Trường Sa." },
+            { q: "Các đảo và quần đảo nào sau đây ở Biển Đông không thuộc chủ quyền của Việt Nam?", options: ["Trường Sa.", "Hoàng Sa.", "Chàng Tây.", "Đông Sa."], a: "Đông Sa." },
+            { q: "Nguồn tài nguyên, khoáng sản, du lịch đa dạng là điều kiện để các đảo trên biển Đông phát triển lĩnh vực nào sau đây?", options: ["Kiểm soát, đảm bảo an ninh giao thông trên biển.", "Xây dựng cơ sở hậu cần, kỹ thuật, phục vụ quân sự.", "Phát triển hoạt động kinh tế có tầm chiến lược.", "Thuận lợi xây dựng các trạm thông tin, trạm dừng chân."], a: "Phát triển hoạt động kinh tế có tầm chiến lược." },
+            { q: "Quần đảo Trường Sa và Hoàng Sa của Việt Nam ngoài có vị trí chiến lược về kinh tế, còn có vị trí chiến lược về", options: ["văn hóa - xã hội.", "giao thông vận tải.", "quốc phòng - an ninh.", "khoa học - kĩ thuật."], a: "quốc phòng - an ninh." }
+        ];
+
+        const rawTF = [
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai. \n'Nay quan gia còn trẻ thơ mà thiên tai xảy ra luôn, trẫm (tức Lê Nhân Tông) rất lo sợ. Mối hại ngày nay có thể là do gây bè cánh, tiến cử không công bằng, có thể vì cậy thế công thần nơi tiềm để cho vợ con chạy chọt nhờ vả nơi quyền thế, có thể do để bọn gia nô làm hại dân lành, hay thậm thụt ở các nhà quyền thế để xin khỏi tội,..' \n(Ngô Sĩ Liên và các sử thần triều Hậu Lê. 1998. Đại Việt sử kí toàn thư, Tập 2. NXB Khoa học xã hội. Hà Nội. tr.372)" , items: [
+                    { t: "a) Những lo ngại của vua Lê Nhân Tông cho thấy triều đình đã bắt đầu suy yếu do tình trạng bè phái và lộng quyền trong nội bộ quan lại.", a: true },
+                    { t: "b) Tình trạng dựa vào thế lực, nhờ cậy để chạy tội cho thấy pháp luật thời kì này chưa được thực thi nghiêm minh.", a: true },
+                    { t: "c) Đoạn tư liệu phản ánh rằng các hiện tượng tiêu cực trong bộ máy quan lại có thể là nguyên nhân dẫn đến bất ổn xã hội và thiên tai.", a: false },
+                    { t: "d) Những vấn đề được nêu trong đoạn tư liệu là một trong các nguyên nhân thúc đẩy nhu cầu cải cách mạnh mẽ dưới thời Lê Thánh Tông sau đó.", a: true }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n ‘Năm 1471, nhằm tăng cường sự kiểm soát chỉ đạo của vua đối với các triều thần, tăng cường tính hiệu lực và hiệu quả của bộ máy quan lại, Lê Thánh Tông đã bãi bỏ một số chức quan đại thần có công nhưng không có học thức, thay vào đó bằng các văn quan được tuyển chọn qua thi cử nhằm hạn chế chia bè, kéo cánh trong triều đình, hạn chế sự thao túng quyền lực của các công thần. Việc ông trực tiếp quản lí các bộ đã hạn chế sự cồng kềnh, quan liêu của bộ máy hành chính’.\n(Phan Huy Lê. Lịch sử Việt Nam, tập 2. NXB Giáo dục. Hà Nội. trang 91)", items: [
+                    { t: "a) Đoạn tư liệu cho biết vua Lê Thánh Tông đã tăng cường sự kiểm soát đối với triều thần nhằm nâng cao hiệu quả bộ máy quan lại.", a: true },
+                    { t: "b) Đoạn tư liệu phản ánh việc hạn chế tình trạng chia bè kéo cánh và thao túng quyền lực trong triều đình.", a: true },
+                    { t: "c) Theo đoạn tư liệu, tất cả quan lại dưới thời Lê Thánh Tông đều được tuyển chọn thông qua khoa cử.", a: false },
+                    { t: "d) Những cải cách của Lê Thánh Tông năm 1471 đã khiến quyền lực được tập trung cao độ vào trong tay nhà vua.", a: true }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n‘Năm 1477, Lê Thánh Tông ban hành chế độ quân điền, chia ruộng đất công làng xã cho người dân, từ quan tam phẩm trở xuống đến binh lính, dân đinh, cư dân trong thôn xã theo tỉ lệ. Chính sách quân điền phủ định quyền chi phối ruộng đất công của làng xã theo tục lệ, buộc làng xã phải tuân thủ những nguyên tắc quy định về phân chia và hưởng thụ bộ phận ruộng đất công theo quy định của nhà nước. Trên nguyên tắc, ruộng đất công làng xã không được đem mua bán, chuyển nhượng, quyền đó thuộc về vua. Vua trở thành người chủ lớn nhất trong cả nước và nông dân làng xã trở thành tá điền của nhà nước, làng xã quản lí ruộng đất cho nhà nước trung ương và nhà vua’. \(Phan Huy Lê. Lịch sử Việt Nam, tập 2. NXB Giáo dục. Hà Nội. trang 109)", items: [
+                    { t: "a) Đoạn trích cung cấp thông tin về một số biện pháp cải cách của vua Lê Thánh Tông trên lĩnh vực kinh tế.", a: true },
+                    { t: "b) Chế độ quân điền mà vua Lê Thánh Tông ban hành có điểm tích cực là đảm bảo cho người dân có ruộng đất để cày cấy, canh tác.", a: true },
+                    { t: "c) Với chính sách quân điền, nhà nước Lê sơ trở thành thế lực địa chủ tối cao, làng xã biến thành đơn vị thay mặt nhà nước quản lý ruộng đất.", a: true },
+                    { t: "d) Trong bối cảnh lịch sử lúc bấy giờ, chính sách quân điền gây ra nhiều hệ quá tiêu cực hơn là tích cực.", a: false }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n‘Nội các là một cơ yếu, phải đặc cách chọn lấy những bề tôi chầu hầu tùy tùng ở bên nhà vua khiến cho ra vào gần gụi đề phòng khi cần hỏi han. Những người sung vào chức đó thì lấy ở hàng quan Tam, Tứ phẩm trong các bộ, các viện, còn các thuộc viên thì lấy những người có chức hàm trong Viện hàn lâm sung vào, các bậc thì ở dưới Lục bộ. Phàm những sắc, chiếu, sớ tấu, sách vở, ghi chép, hoặc xem xét giấy tờ, đều thuộc tòa Nội các cả; những viên chức đó đều tùy theo công việc nặng nhẹ, nhiều ít, chước lượng mà chia ra từng tào để cho có chuyên trách’.\n(Lời dụ của Minh Mạng. 2004. Trích trong: Quốc sử quán triều Nguyễn, Đại Nam thực lục, Tập 3. NXB Giáo dục. Hà Nội)", items: [
+                    { t: "a) Nội các là một trong những cơ quan chủ chốt của triều đình phong kiến trung ương nhà Nguyễn từ thời vua Minh Mạng.", a: true },
+                    { t: "b) Toàn bộ các thành viên của Nội các đều lấy từ các chức quan ở trong Lục bộ.", a: false },
+                    { t: "c) Theo lời dụ của Minh Mạng, một trong những nhiệm vụ của Nội các là giúp vua khởi thảo sắc, chiếu, sớ tấu….", a: true },
+                    { t: "d) Nội các chịu trách nhiệm trực tiếp trước nhà vua, đồng thời chịu sự giám sát của Lục bộ và các cơ quan chuyên môn khác.", a: false }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n‘Hiệu quả cải cách hành chính của Minh Mạng là đã tăng cường được tính thống nhất quốc gia, củng cố được vương triều Nguyễn, phần nào ổn định được xã hội sau hàng thế kỉ chiến tranh, vừa chống ngoại xâm vừa nội chiến liên miên. Nhưng bị hạn chế và không tạo nên được sức mạnh kinh tế, chính trị, văn hóa, xã hội và quan hệ quốc tế tốt đẹp, có khả năng kiềm chế được ngoại xâm’\n(Văn Tạo. 2006. Mười cuộc cải cách, đổi mới lớn trong lịch sử Việt Nam. NXB Đại học Sư phạm. Hà Nội. tr.251)", items: [
+                    { t: "a) Đoạn tư liệu phản ánh tác động tích cực và hạn chế trong cải cách của vua Minh Mạng trên lĩnh vực hành chính.", a: true },
+                    { t: "b) Một trong những hiệu quả tích cực trong cải cách của vua Minh Mạng là tạo dựng được mối quan hệ tốt đẹp với bên ngoài, củng cố khối đại đoàn kết dân tộc.", a: false },
+                    { t: "c) Cải cách của vua Minh Mạng đã thống nhất các đơn vị hành chính địa phương trong cả nước, thông qua đó hoàn thành thống nhất đất nước về mặt hành chính.", a: true },
+                    { t: "d) Cải cách của vua Minh Mạng đã góp phần ổn định tình hình đất nước nhưng không tạo được động lực thúc đẩy sự phát triển mạnh mẽ của kinh tế, chính trị đất nước..", a: true }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n‘Ở nhiều nơi, núi chạy lan ra sát biển, tạo thành những địa hình hiểm trở, những vũng vịnh kín, xen lẫn với những bờ biển bằng phẳng thuận tiện cho việc trú đậu của tàu thuyền và chuyển quân bằng đường biển. Hệ thống quần đảo và đảo trên vùng biển nước ta cùng với dải đất liền ven biển thuận lợi cho việc xây dựng các căn cứ quân sự, điểm tựa, pháo đài, trạm gác tiền tiêu, hình thành tuyến phòng thủ nhiều tầng, nhiều lớp, với thế bố trí chiến lược hợp thế trên bờ, dưới nước, tạo điều kiện thuận lợi để bảo vệ, kiểm soát và làm chủ vùng biển của nước ta.’\n(Nguyễn Thái Anh chủ biên. 2013. Những kí ức không thể lãng quên, Hoàng Sa, Trường Sa trong trái tim Tổ quốc. NXB Văn hoá - thông tin. Hà Nội)", items: [
+                    { t: "a) Biển Đông có vai trò quan trọng trong việc xây dựng các căn cứ quân sự, điểm tựa và hệ thống phòng thủ của Việt Nam.", a: true },
+                    { t: "b) Các đảo và quần đảo Việt Nam tạo ra cơ sở để xây dựng thành cơ sở hậu cần - kĩ thuật phục vụ hoạt động quân sự.", a: true },
+                    { t: "c) Biển Đông là tuyến phòng thủ liên hoàn biển - đảo - bờ để bảo vệ Tổ quốc.", a: true },
+                    { t: "d) Hệ thống các đảo và quần đảo Biển Đông thường được chia thành: hệ thống đảo tiền tiêu, đảo du lịch, đảo ven bờ và hai quần đảo xa bờ.", a: false }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n'Biển Đông là nơi cư trú của 12 nghìn loài sinh vật, trong đó có khoảng 2040 loài cá, 350 loài san hô, 662 loài rong biển, 12 loài có vú… Trong khu vực này, tập trung 221 loài cây nước mặn tạo nên diện tích rừng ngập mặn tương đối lớn. Khu vực thềm lục địa của biển Đông có tiềm năng dầu khí cao như bồn trũng Bru – nây, Nam Côn sơn, Hoàng Sa,’\n(Nguyễn Văn Âu. 2002. Địa lí tự nhiên Biển Đông. NXB Đại học Quốc gia Hà Nội. tr.33, 71 – 72)", items: [
+                    { t: "a) Sự phong phú về sinh vật và tài nguyên ở Biển Đông là cơ sở để Việt Nam phát triển kinh tế biển bền vững.", a: true },
+                    { t: "b) Vì tài nguyên sinh vật phong phú nên Biển Đông không cần chú trọng bảo vệ môi trường sinh thái.", a: false },
+                    { t: "c) Tiềm năng dầu khí ở thềm lục địa Biển Đông có ý nghĩa quan trọng đối với phát triển công nghiệp năng lượng.", a: true },
+                    { t: "d) Việc khai thác tài nguyên Biển Đông cần gắn với bảo vệ môi trường và chủ quyền quốc gia.", a: true }
+                ]
+            },
+            {
+                title: "Đọc đoạn tư liệu sau đây: trong mỗi ý a), b), c), d), học sinh chọn đúng hoặc sai.\n'Biển là bộ phận cấu thành chủ quyền thiêng liêng của Tổ quốc, là không gian sinh tồn, cửa ngõ giao lưu quốc tế, gắn bó mật thiết với sự nghiệp xây dựng và bảo vệ Tổ quốc. Việt Nam phải trở thành quốc gia mạnh về biển, giàu từ biển, phát triển bền vững, thịnh vượng, an ninh và an toàn; phát triển bền vững kinh tế biển gắn liền với đảm bảo quốc phòng, an ninh, giữ vững độc lập, chủ quyền và toàn vẹn lãnh thổ, tăng cường đối ngoại, hợp tác quốc tế về biển, góp phần duy trì môi trường hòa bình, ổn định cho phát triển. Phát triển bền vững kinh tế biển Việt Nam là trách nhiệm của cả hệ thống chính trị, là quyền và nghĩa vụ của mọi tổ chức, doanh nghiệp và người dân Việt Nam’\n(Nghị quyết số 36 – NQ/TW ngày 22 - 10 – 2018 về Chiến lược phát triển bền vững kinh tế biển Việt Nam đến năm 2030, tầm nhìn đến năm 2045)", items: [
+                    { t: "a) Nghị quyết số 36 – NQ/TW ngày 22 - 10 – 2018 của Đảng Cộng sản Việt Nam đã đưa ra nhiều bằng chứng khẳng định Hoàng Sa và Trường Sa thuộc chủ quyền của Việt Nam..", a: false },
+                    { t: "b) Quá trình xây dựng và bảo vệ Tổ quốc của Việt Nam hiện nay có sự gắn bó mật thiết với Biển Đông.", a: true },
+                    { t: "c) Trách nhiệm phát triển bền vững kinh tế biển không liên quan đến những người dân sống trong khu vực đất liền.", a: false },
+                    { t: "d) Nhiệm vụ phát triển kinh tế biển với đảm bảo an ninh quốc phòng luôn có sự gắn bó mật thiết, không tách rời nhau.", a: true }
+                ]
+            }
+
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let gridPage = 0;
+        const ITEMS_PER_PAGE = 30;
+        let tfState = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function changeGridPage(step) {
+            const totalPages = Math.ceil(shuffledQuiz.length / ITEMS_PER_PAGE);
+            gridPage = Math.max(0, Math.min(totalPages - 1, gridPage + step));
+            renderQuestionGrid();
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById("question-grid");
+            const pageInfo = document.getElementById("page-info");
+            if (!grid || !pageInfo) return;
+
+            grid.innerHTML = '';
+
+            const start = gridPage * ITEMS_PER_PAGE;
+            const end = Math.min(start + ITEMS_PER_PAGE, shuffledQuiz.length);
+            const totalPages = Math.ceil(shuffledQuiz.length / ITEMS_PER_PAGE);
+
+            pageInfo.innerText = `${gridPage + 1} / ${totalPages}`;
+
+            for (let i = start; i < end; i++) {
+                const q = shuffledQuiz[i];
+                const btn = document.createElement("button");
+                btn.className = "q-nav-btn";
+                btn.innerText = i + 1;
+
+                if (q.userAnswer !== null) {
+                    let isCorrect = (q.type === 'MC') ? (q.userAnswer === q.a) : q.isCorrectAll;
+                    btn.classList.add(isCorrect ? "correct-tile" : "wrong-tile");
+                }
+
+                if (i === currentIdx) {
+                    btn.classList.add("active");
+                }
+
+                btn.onclick = () => {
+                    currentIdx = i;
+                    render();
+                };
+                grid.appendChild(btn);
+            }
+        }
+
+        function startQuiz(mode) {
+            currentIdx = 0;
+            score = 0;
+            gridPage = 0;
+
+            let mcPart = [];
+            let tfPart = [];
+
+            if (mode === 'mc' || mode === 'all') {
+                mcPart = shuffle([...rawMC]).map(q => ({
+                    ...q,
+                    type: 'MC',
+                    options: shuffle([...q.options]),
+                    userAnswer: null
+                }));
+            }
+            if (mode === 'tf' || mode === 'all') {
+                tfPart = shuffle([...rawTF]).map(q => ({
+                    ...q,
+                    type: 'TF',
+                    userAnswer: null,
+                    isCorrectAll: null
+                }));
+            }
+
+            shuffledQuiz = [...mcPart, ...tfPart];
+
+            if (shuffledQuiz.length === 0) {
+                alert("Không có câu hỏi cho chế độ này!");
+                return;
+            }
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            render();
+        }
+
+        function render() {
+            const body = document.getElementById('quiz-body');
+            const actionBtn = document.getElementById('action-btn');
+            const q = shuffledQuiz[currentIdx];
+
+            document.getElementById('score-live-display').innerText = `Đúng: ${score}`;
+            document.getElementById('info').innerText = `${currentIdx + 1} / ${shuffledQuiz.length}`;
+            document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / shuffledQuiz.length) * 100}%`;
+            document.getElementById('part-name').innerText = q.type === 'MC' ? "PHẦN I: TRẮC NGHIỆM" : "PHẦN II: ĐÚNG / SAI";
+
+            gridPage = Math.floor(currentIdx / ITEMS_PER_PAGE);
+            renderQuestionGrid();
+
+            body.innerHTML = '';
+            actionBtn.classList.add('hidden');
+
+            if (q.type === 'MC') {
+                body.innerHTML = `<div class="q-text">${q.q}</div><div class="opt-list" id="opt-list"></div>`;
+                q.options.forEach((opt, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'opt-item';
+                    div.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+
+                    if (q.userAnswer !== null) {
+                        div.style.pointerEvents = 'none';
+                        if (opt === q.a) div.classList.add('correct');
+                        if (opt === q.userAnswer && q.userAnswer !== q.a) div.classList.add('wrong');
+                    } else {
+                        div.onclick = () => handleMC(div, opt, q.a);
+                    }
+                    document.getElementById('opt-list').appendChild(div);
+                });
+            } else {
+                body.innerHTML = `<div class="q-text">${q.title}</div><div id="tf-wrap"></div>`;
+                tfState = q.userAnswer !== null ? [...q.userAnswer] : new Array(q.items.length).fill(null);
+
+                q.items.forEach((item, i) => {
+                    const box = document.createElement('div');
+                    box.className = 'tf-box';
+                    box.innerHTML = `
+                <div style="flex:1; padding-right:10px;">${item.t}</div>
+                <div class="tf-btn-group">
+                    <button class="tf-btn ${q.userAnswer !== null && q.userAnswer[i] === true ? (item.a === true ? 'correct' : 'wrong') : (q.userAnswer === null && tfState[i] === true ? 'selected-t' : '')}" 
+                            onclick="handleTF(${i}, true, this)">ĐÚNG</button>
+                    <button class="tf-btn ${q.userAnswer !== null && q.userAnswer[i] === false ? (item.a === false ? 'correct' : 'wrong') : (q.userAnswer === null && tfState[i] === false ? 'selected-f' : '')}" 
+                            onclick="handleTF(${i}, false, this)">SAI</button>
+                </div>`;
+
+                    if (q.userAnswer !== null) {
+                        const btns = box.querySelectorAll('.tf-btn');
+                        btns.forEach(b => b.style.pointerEvents = 'none');
+                        if (item.a === true) btns[0].classList.add('correct');
+                        else btns[1].classList.add('correct');
+                    }
+                    document.getElementById('tf-wrap').appendChild(box);
+                });
+
+                if (q.userAnswer === null) {
+                    actionBtn.innerText = "Xác nhận";
+                    actionBtn.classList.remove('hidden');
+                    actionBtn.disabled = !tfState.every(v => v !== null);
+                    actionBtn.onclick = processTF;
+                }
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIdx < shuffledQuiz.length - 1) {
+                currentIdx++;
+                render();
+            } else {
+                showFinal();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                render();
+            }
+        }
+
+        function handleMC(el, sel, cor) {
+            const q = shuffledQuiz[currentIdx];
+            q.userAnswer = sel;
+
+            if (sel === cor) {
+                el.classList.add('correct');
+                score++;
+            } else {
+                el.classList.add('wrong');
+                document.querySelectorAll('.opt-item').forEach(i => {
+                    if (i.innerText.includes(cor)) i.classList.add('correct');
+                });
+            }
+
+            renderQuestionGrid();
+        }
+
+        function handleTF(idx, val, btn) {
+            tfState[idx] = val;
+            const group = btn.parentElement;
+            group.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected-t', 'selected-f'));
+            btn.classList.add(val ? 'selected-t' : 'selected-f');
+
+            document.getElementById('action-btn').disabled = tfState.includes(null);
+        }
+
+        function processTF() {
+            const q = shuffledQuiz[currentIdx];
+            q.userAnswer = [...tfState];
+
+            let allOk = true;
+            q.items.forEach((item, i) => {
+                if (tfState[i] !== item.a) allOk = false;
+            });
+
+            q.isCorrectAll = allOk;
+            if (allOk) score += 2;
+
+            render();
+            renderQuestionGrid();
+        }
+
+        function next() {
+            currentIdx++;
+            if (currentIdx < shuffledQuiz.length) render();
+            else showFinal();
+        }
+
+        function showFinal() {
+            let maxScore = 0;
+            shuffledQuiz.forEach(q => {
+                if (q.type === 'MC') maxScore += 1;
+                else maxScore += 2;
+            });
+
+            document.getElementById('quiz-screen').innerHTML = `
+        <div style="text-align:center; padding: 20px;">
+            <h2 style="color:var(--primary);">HOÀN THÀNH BÀI ÔN TẬP</h2>
+            <div style="font-size:4rem; font-weight:900; margin:20px 0;">
+                ${score} <small style="font-size:1.5rem; color:#64748b;">/ ${maxScore}</small>
+            </div>
+            <button class="main-btn" onclick="location.reload()" style="width:200px;">Làm lại bài mới</button>
+            </div>
+            `;
+        }
+
+    //made by mpk x3pixel
+    </script>
+</body>
+
+</html>
